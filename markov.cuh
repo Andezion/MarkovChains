@@ -14,13 +14,12 @@ exit(1); \
 }
 
 class MarkovChainCUDA {
-private:
     int num_states;
     int num_agents;
 
-    float* d_transition_matrix;
-    int* d_current_states;
-    void* d_rng_states;
+    float* d_transition_matrix{};
+    int* d_current_states{};
+    void* d_rng_states{};
 
 public:
     MarkovChainCUDA(int states, int agents);
@@ -32,9 +31,9 @@ public:
 
     void getStates(std::vector<int>& states_host);
 
-    void initRNG(unsigned long seed);
+    void initRNG(unsigned long seed) const;
 
-    void step();
+    void step() const;
 };
 
 #endif // MARKOV_CUH
