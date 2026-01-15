@@ -6,7 +6,7 @@
 void test_deterministic_transition() {
     std::cout << "Running test_deterministic_transition... ";
 
-    std::vector<float> matrix = {
+    const std::vector matrix = {
         0.0f, 1.0f,
         1.0f, 0.0f
     };
@@ -15,7 +15,7 @@ void test_deterministic_transition() {
     mc.setTransitionMatrix(matrix);
     mc.initRNG(42);
 
-    std::vector<int> start_states(10, 0);
+    const std::vector start_states(10, 0);
     mc.setStates(start_states);
 
     mc.step();
@@ -23,36 +23,53 @@ void test_deterministic_transition() {
     res.resize(10);
     mc.getStates(res);
 
-    for(int s : res) assert(s == 1);
+    for(const int s : res)
+    {
+        assert(s == 1);
+    }
 
     mc.step();
     mc.getStates(res);
-    for(int s : res) assert(s == 0);
+
+    for(const int s : res)
+    {
+        assert(s == 0);
+    }
 
     std::cout << "PASSED" << std::endl;
 }
 
-void test_stationary_distribution() {
+void test_stationary_distribution()
+{
     std::cout << "Running test_stationary_distribution... ";
 
-    int n_agents = 10000;
+    const int n_agents = 10000;
     MarkovChainCUDA mc(2, n_agents);
 
-    std::vector<float> matrix = {0.5f, 0.5f, 0.5f, 0.5f};
+    const std::vector matrix = {0.5f, 0.5f, 0.5f, 0.5f};
     mc.setTransitionMatrix(matrix);
     mc.initRNG(999);
 
-    std::vector<int> states(n_agents, 0);
+    std::vector states(n_agents, 0);
     mc.setStates(states);
 
-    for(int i=0; i<50; ++i) mc.step();
+    for(int i = 0; i < 50; ++i)
+    {
+        mc.step();
+    }
 
     mc.getStates(states);
 
     int count0 = 0;
-    for(int s : states) if(s == 0) count0++;
+    for(const int s : states)
+    {
+        if(s == 0)
+        {
+            count0++;
+        }
+    }
 
-    float ratio = (float)count0 / n_agents;
+    const float ratio = static_cast<float>(count0) / n_agents;
 
     assert(ratio > 0.48f && ratio < 0.52f);
 
